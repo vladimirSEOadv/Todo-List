@@ -7,18 +7,15 @@ const PostForm = ({create}) => {
     const [post, setPost] = useState({title:'', body:''})
 
     const addNewPost = (e) => {
-        if(post.title == '' && post.body == ''){
+        if(post.title === '' && post.body === ''){
             e.preventDefault()
             alert("Заполните поля формы")
-            return
-        }else if(post.title == ''){
+        }else if(post.title === ''){
             e.preventDefault()
             alert("Заполните поле названия")
-            return
-        }else if(post.body == ''){
+        }else if(post.body === ''){
             e.preventDefault()
             alert("Заполните поле описания")
-            return
         }else {
             e.preventDefault()
             const newPost = {
