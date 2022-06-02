@@ -7,23 +7,39 @@ const PostForm = ({create}) => {
     const [post, setPost] = useState({title:'', body:''})
 
     const addNewPost = (e) => {
-        e.preventDefault()
-        const newPost = {
-            ...post, id: Date.now()
+        if(post.title == '' && post.body == ''){
+            e.preventDefault()
+            alert("Заполните поля формы")
+            return
+        }else if(post.title == ''){
+            e.preventDefault()
+            alert("Заполните поле названия")
+            return
+        }else if(post.body == ''){
+            e.preventDefault()
+            alert("Заполните поле описания")
+            return
+        }else {
+            e.preventDefault()
+            const newPost = {
+                ...post, id: Date.now()
+            }
+            create(newPost)
+            setPost({title:'', body:''})
         }
-        create(newPost)
-        setPost({title:'', body:''})
 
     }
     return (
         <form>
             <MyInput
+                label={'Название поста'}
                 value={post.title}
                 onChange={e => setPost({...post, title: e.target.value})}
                 type="text"
                 placeholder="Название поста"
             />
             <MyInput
+                label={'Описание поста'}
                 value={post.body}
                 onChange={e => setPost({...post, body: e.target.value})}
                 type="text" placeholder="Описание поста"/>
