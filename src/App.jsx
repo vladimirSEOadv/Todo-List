@@ -42,15 +42,7 @@ function App() {
         <PostFilter
             filter={filter}
             setFilter={setFilter}/>
-        {sortedAdnSearchedPosts.length
-               ?
                <PostList remove={removePost} posts={sortedAdnSearchedPosts} title={'Список постов 1'}/>
-               :
-               <h1 style={{textAlign: 'center'}}>
-                   Посты не найдены
-               </h1>
-        }
-
     </div>
   );
 }
