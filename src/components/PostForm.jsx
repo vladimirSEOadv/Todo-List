@@ -2,17 +2,27 @@ import React, {useState} from 'react';
 import MyInput from "./UI/input/MyInput";
 import MyButton from "./UI/button/MyButton";
 
-
 const PostForm = ({create}) => {
     const [post, setPost] = useState({title:'', body:''})
 
     const addNewPost = (e) => {
-        e.preventDefault()
-        const newPost = {
-            ...post, id: Date.now()
+        if(post.title === '' && post.body === ''){
+            e.preventDefault()
+            alert("Заполните поля формы")
+        }else if(post.title === ''){
+            e.preventDefault()
+            alert("Заполните поле названия")
+        }else if(post.body === ''){
+            e.preventDefault()
+            alert("Заполните поле описания")
+        }else {
+            e.preventDefault()
+            const newPost = {
+                ...post, id: Date.now()
+            }
+            create(newPost)
+            setPost({title:'', body:''})
         }
-        create(newPost)
-        setPost({title:'', body:''})
 
     }
     return (
