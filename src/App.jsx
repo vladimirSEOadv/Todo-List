@@ -8,21 +8,29 @@ import MyButton from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
 import PostsService from "./API/PostsService";
 import Loader from "./components/UI/Loader/Loader";
+import {useFetching} from "./hooks/useFetching";
+
+
 
 //https://youtu.be/GNrdg3PzpJQ?t=5427
-//https://github.com/utimur/react-fundamental-course/blob/master/src/hooks/usePosts.js
+
 
 function App() {
-    const [posts, setPosts] = useState([
-            {id: 1, title: 'JavaScript', body: 'Description'},
-            {id: 2, title: 'Python', body: 'Описание'},
-            {id: 3, title: 'C++', body: 'Подпись'}
-        ]
-    )
+    const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
+    const [totalCount, setTotalCount] = useState(0)
+    const [limit, setLimit] = useState(10)
+    const [page, setPage] = useState(1)
     const sortedAdnSearchedPosts = usePosts(posts, filter.sort, filter.query);
-    const [isPostLoading, setIsPostLoading] = useState(false)
+
+
+    const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
+        const responce = await PostsService.getAll(limit, page);
+        setPosts(responce.data)
+        console.log(responce.headers['x-total-count'])
+        setTotalCount(responce.headers['x-total-count'])
+    })
 
     useEffect(() => {
         fetchPosts()
@@ -33,23 +41,12 @@ function App() {
         setModal(false)
     }
 
-    async function fetchPosts(){
-        setIsPostLoading(true)
-        setTimeout(async () => {
-            console.log('timeout')
-            const posts = await PostsService.getAll();
-            setPosts(posts)
-            setIsPostLoading(false);
-        },5000)
-    }
-
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
     }
 
   return (
     <div className="App">
-        <button onClick={fetchPosts}>GET POSTS</button>
         <MyButton style={{marginTop: 30}} onClick={() => setModal(true)} >
             Создать пост
         </MyButton>
@@ -61,6 +58,9 @@ function App() {
             filter={filter}
             setFilter={setFilter}
         />
+        {postError &&
+            <h1 style={{backgroundColor: 'red'}}>Произошла ошибка ${postError}</h1>
+        }
         {isPostLoading
             ? <div style={{display: 'flex', justifyContent:'center', marginTop:'50px'}}><Loader/></div>
             : <PostList remove={removePost} posts={sortedAdnSearchedPosts} title={'Список постов 1'}/>
