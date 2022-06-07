@@ -6,8 +6,8 @@ import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
-import axios from "axios";
 import PostsService from "./API/PostsService";
+import Loader from "./components/UI/Loader/Loader";
 
 //https://youtu.be/GNrdg3PzpJQ?t=5427
 //https://github.com/utimur/react-fundamental-course/blob/master/src/hooks/usePosts.js
@@ -22,7 +22,7 @@ function App() {
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
     const sortedAdnSearchedPosts = usePosts(posts, filter.sort, filter.query);
-    // const [isPostLoading, setIsPostLoading] = useState()
+    const [isPostLoading, setIsPostLoading] = useState(false)
 
     useEffect(() => {
         fetchPosts()
@@ -34,9 +34,13 @@ function App() {
     }
 
     async function fetchPosts(){
-        const posts = await PostsService.getAll();
-        setPosts(posts)
-
+        setIsPostLoading(true)
+        setTimeout(async () => {
+            console.log('timeout')
+            const posts = await PostsService.getAll();
+            setPosts(posts)
+            setIsPostLoading(false);
+        },5000)
     }
 
     const removePost = (post) => {
@@ -55,8 +59,13 @@ function App() {
         <hr style={{margin: '15px 0'}}/>
         <PostFilter
             filter={filter}
-            setFilter={setFilter}/>
-               <PostList remove={removePost} posts={sortedAdnSearchedPosts} title={'Список постов 1'}/>
+            setFilter={setFilter}
+        />
+        {isPostLoading
+            ? <div style={{display: 'flex', justifyContent:'center', marginTop:'50px'}}><Loader/></div>
+            : <PostList remove={removePost} posts={sortedAdnSearchedPosts} title={'Список постов 1'}/>
+        }
+
     </div>
   );
 }
