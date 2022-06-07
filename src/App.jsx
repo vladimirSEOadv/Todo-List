@@ -9,6 +9,7 @@ import {usePosts} from "./hooks/usePosts";
 import PostsService from "./API/PostsService";
 import Loader from "./components/UI/Loader/Loader";
 import {useFetching} from "./hooks/useFetching";
+import {getPageCount} from "./utils/pages";
 
 
 
@@ -19,7 +20,7 @@ function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
-    const [totalCount, setTotalCount] = useState(0)
+    const [totalPages, setTotalPages] = useState(0)
     const [limit, setLimit] = useState(10)
     const [page, setPage] = useState(1)
     const sortedAdnSearchedPosts = usePosts(posts, filter.sort, filter.query);
@@ -28,8 +29,8 @@ function App() {
     const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
         const responce = await PostsService.getAll(limit, page);
         setPosts(responce.data)
-        console.log(responce.headers['x-total-count'])
-        setTotalCount(responce.headers['x-total-count'])
+        const totalCount = (responce.headers['x-total-count'])
+        setTotalPages(getPageCount(totalCount, limit))
     })
 
     useEffect(() => {
@@ -59,7 +60,7 @@ function App() {
             setFilter={setFilter}
         />
         {postError &&
-            <h1 style={{backgroundColor: 'red'}}>Произошла ошибка ${postError}</h1>
+            <h1 style={{backgroundColor: 'red', padding: 25, marginTop: 25}}>Произошла ошибка ${postError}</h1>
         }
         {isPostLoading
             ? <div style={{display: 'flex', justifyContent:'center', marginTop:'50px'}}><Loader/></div>
