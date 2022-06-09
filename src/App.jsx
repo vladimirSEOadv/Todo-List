@@ -25,7 +25,7 @@ function App() {
 
     let pagesArray = usePagination(totalPages, limit)
 
-    const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
+    const [fetchPosts, isPostLoading, postError] = useFetching(async (limit, page) => {
         const responce = await PostsService.getAll(limit, page);
         setPosts(responce.data)
         const totalCount = (responce.headers['x-total-count'])
@@ -33,8 +33,8 @@ function App() {
     })
 
     useEffect(() => {
-        fetchPosts()
-    },[page])
+        fetchPosts(limit, page)
+    },[])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -43,6 +43,11 @@ function App() {
 
     const removePost = (post) => {
         setPosts(posts.filter(p => p.id !== post.id))
+    }
+
+    const changePage = (page) => {
+        setPage(page)
+        fetchPosts(limit, page)
     }
 
   return (
@@ -68,7 +73,7 @@ function App() {
         <div className='page__wrapper'>
             {pagesArray.map(p =>
                 <span
-                    onClick={() => setPage(p)}
+                    onClick={() => changePage(p)}
                     key={p}
                     className={ page === p
                         ? 'page page__current'
