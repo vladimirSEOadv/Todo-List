@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './styles/App.css'
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -9,7 +9,7 @@ import {usePosts} from "./hooks/usePosts";
 import PostsService from "./API/PostsService";
 import Loader from "./components/UI/Loader/Loader";
 import {useFetching} from "./hooks/useFetching";
-import {getPageArray, getPageCount} from "./utils/pages";
+import {usePagination, getPageCount} from "./utils/pages";
 
 //https://youtu.be/GNrdg3PzpJQ?t=7515
 
@@ -23,7 +23,7 @@ function App() {
     const [page, setPage] = useState(1)
     const sortedAdnSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-    let pagesArray = getPageArray(totalPages, limit)
+    let pagesArray = usePagination(totalPages, limit)
 
     const [fetchPosts, isPostLoading, postError] = useFetching(async () => {
         const responce = await PostsService.getAll(limit, page);

@@ -4,7 +4,7 @@ export const getPageCount = (totalCount, limit) => {
     return Math.ceil(totalCount / limit)
 }
 
-export const getPageArray = (totalPages, limit) => { // Новая функция
+export const usePagination = (totalPages, limit) => { // Новая функция
     const pagesArray = useMemo(() => {
         console.log('start Memo')
         let result = []
