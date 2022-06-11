@@ -1,83 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import './styles/App.css'
-import PostList from "./components/PostList";
-import PostForm from "./components/PostForm";
-import PostFilter from "./components/PostFilter";
-import MyModal from "./components/UI/MyModal/MyModal";
-import MyButton from "./components/UI/button/MyButton";
-import {usePosts} from "./hooks/usePosts";
-import PostsService from "./API/PostsService";
-import Loader from "./components/UI/Loader/Loader";
-import {useFetching} from "./hooks/useFetching";
-import {getPageCount} from "./utils/pages";
-import Pagination from "./components/UI/pagination/Pagination";
+import {BrowserRouter} from "react-router-dom";
+import Navbar from "./components/UI/Navbar/Navbar";
+import AppRouter from "./components/AppRouter";
 
-//https://youtu.be/GNrdg3PzpJQ?t=7515
+// 1. Вместо switch теперь необходимо использовать Routes;
+//     2. useHistory убрали в router-dom v6 и заменили на useNavige, в котором по умолчанию исп-ся push
+//     3.exact не нужен теперь
+//     4. в route исп-ся теперь element c указанием компонента, вместо component
+//     5.у тебя в видео при рендере массива роутов идет component={route.component} ; у меня рендер массива роутов заработал только после указания в скобках  element={<route.element />}
+// 6.Redirect тоже убрали вместо него нужно исп-ть Route с переданным в element  модуля <Navigate /> ,
+//     пример с моего кода( <Route path="/*" element={<Navigate to="/login" replace />} />))
 
+//https://youtu.be/GNrdg3PzpJQ?t=8521
 
 function App() {
-    const [posts, setPosts] = useState([])
-    const [filter, setFilter] = useState({sort: '', query: ''})
-    const [modal, setModal] = useState(false)
-    const [totalPages, setTotalPages] = useState(1)
-    const [limit, setLimit] = useState(10)
-    const [page, setPage] = useState(1)
-    const sortedAdnSearchedPosts = usePosts(posts, filter.sort, filter.query);
-
-
-
-    const [fetchPosts, isPostLoading, postError] = useFetching(async (limit, page) => {
-        const responce = await PostsService.getAll(limit, page);
-        setPosts(responce.data)
-        const totalCount = (responce.headers['x-total-count'])
-        setTotalPages(getPageCount(totalCount, limit))
-    })
-
-    useEffect(() => {
-        fetchPosts(limit, page)
-    },[])
-
-    const createPost = (newPost) => {
-        setPosts([...posts, newPost])
-        setModal(false)
-    }
-
-    const removePost = (post) => {
-        setPosts(posts.filter(p => p.id !== post.id))
-    }
-
-    const changePage = (page) => {
-        setPage(page)
-        fetchPosts(limit, page)
-    }
-
-  return (
-    <div className="App">
-        <MyButton style={{marginTop: 30}} onClick={() => setModal(true)} >
-            Создать пост
-        </MyButton>
-        <MyModal visible={modal} setVisible={setModal}>
-            <PostForm create={createPost}/>
-        </MyModal>
-        <hr style={{margin: '15px 0'}}/>
-        <PostFilter
-            filter={filter}
-            setFilter={setFilter}
-        />
-        {postError &&
-            <h1 style={{backgroundColor: 'red', padding: 25, marginTop: 25}}>Произошла ошибка ${postError}</h1>
-        }
-        {isPostLoading
-            ? <div style={{display: 'flex', justifyContent:'center', marginTop:'50px'}}><Loader/></div>
-            : <PostList remove={removePost} posts={sortedAdnSearchedPosts} title={'Список постов 1'}/>
-        }
-        <Pagination
-            totalPages={totalPages}
-            page={page}
-            changePage={changePage}
-            limit={limit}/>
-    </div>
-  );
+    return (
+        <BrowserRouter>
+            <Navbar/>
+            <AppRouter/>
+        </BrowserRouter>
+    )
 }
 
 export default App
