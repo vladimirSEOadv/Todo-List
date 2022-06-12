@@ -20,8 +20,6 @@ function PostsPage() {
     const [page, setPage] = useState(1)
     const sortedAdnSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-
-
     const [fetchPosts, isPostLoading, postError] = useFetching(async (limit, page) => {
         const responce = await PostsService.getAll(limit, page);
         setPosts(responce.data)

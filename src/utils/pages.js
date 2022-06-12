@@ -6,7 +6,6 @@ export const getPageCount = (totalCount, limit) => {
 
 export const usePagination = (totalPages, limit) => { // Новая функция
     const pagesArray = useMemo(() => {
-        console.log('usePagination hook')
         let result = []
         for (let i = 1; i < totalPages; i++) {
             result.push(i)
