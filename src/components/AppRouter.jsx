@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Routes} from "react-router-dom";
 
 import {routs} from "../router/index"
-console.log(routs)
+
 const AppRouter = () => {
     return (
         <Routes>
