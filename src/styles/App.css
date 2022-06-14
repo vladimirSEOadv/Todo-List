@@ -87,6 +87,7 @@
   padding-left: 15px;
 }
 
-.navbar__links > a:hover {
+/*.navbar__links > a:hover { */
+a:hover {
   color: greenyellow;
 }
