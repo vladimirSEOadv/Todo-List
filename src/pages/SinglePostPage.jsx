@@ -9,18 +9,18 @@ import PostComments from "../components/PostComments";
 
 const SinglePostPage = () => {
     const [postData, setPostData] = useState({})
-    const [CommentsByPost, setCommentsByPost] = useState([])
+    const [commentsByPost, setCommentsByPost] = useState([])
     const params = useParams()
     const postId = params.id
 
     const [fetchPosts, isPostLoading, postError] = useFetching(async (postId) => {
-        const responce = await PostsService.getPostById(postId);
-        setPostData(responce.data)
+        const response = await PostsService.getPostById(postId);
+        setPostData(response.data)
     })
 
     const [fetchComments, isCommentLoading, CommentError] = useFetching(async (postId) => {
-        const responce = await PostsService.getPostCommentsByPostId(postId);
-        setCommentsByPost(responce.data)
+        const response = await PostsService.getPostCommentsByPostId(postId);
+        setCommentsByPost(response.data)
     })
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const SinglePostPage = () => {
             }
             {isCommentLoading
                 ? <div style={{display: 'flex', justifyContent:'center', marginTop:'150px'}}><Loader/></div>
-                : <PostComments CommentsByPost={CommentsByPost} />
+                : <PostComments commentsByPost={commentsByPost} />
             }
         </div>
     );
