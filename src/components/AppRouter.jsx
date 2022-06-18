@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Route, Routes} from "react-router-dom";
 import {privateRouts, publicRouts} from "../router/index"
+import {AuthContext} from "../context";
 
 const AppRouter = () => {
-    const isAuth = false;
+    const {isAuth} = useContext(AuthContext)
+    console.log(isAuth)
     return (
         isAuth
             ?
@@ -16,7 +18,7 @@ const AppRouter = () => {
                     />
 
                 )}
-                {/*<Navigate to="/posts-page" replace={true} />*/}
+
             </Routes>
             :
             <Routes>
