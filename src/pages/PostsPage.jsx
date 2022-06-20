@@ -11,6 +11,7 @@ import {getPageCount} from "../utils/pages";
 import Pagination from "../components/UI/pagination/Pagination";
 import PostList from "../components/PostList";
 import {useObserver} from "../hooks/useObserver";
+import MySelect from "../components/UI/select/MySelect";
 
 function PostsPage() {
     const [posts, setPosts] = useState([])
@@ -36,7 +37,7 @@ function PostsPage() {
 
     useEffect(() => {
         fetchPosts(limit, page)
-    }, [page])
+    }, [page, limit])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -63,6 +64,17 @@ function PostsPage() {
             <PostFilter
                 filter={filter}
                 setFilter={setFilter}
+            />
+            <MySelect
+                value={limit}
+                onChange={value => setLimit(value)}
+                defaultValue="Количество элементов на странице"
+                options={[
+                    {value: 10, name: '5'},
+                    {value: 15, name: '10'},
+                    {value: 20, name: '15'},
+                    {value: -1, name: 'Показать всё'},
+                ]}
             />
             {postError &&
             <h1 style={{backgroundColor: 'red', padding: 25, marginTop: 25}}>Произошла ошибка ${postError}</h1>
