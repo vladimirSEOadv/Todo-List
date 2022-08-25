@@ -7,9 +7,6 @@ import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
 
-//https://youtu.be/GNrdg3PzpJQ?t=5427
-//https://github.com/utimur/react-fundamental-course/blob/master/src/hooks/usePosts.js
-
 function App() {
     const [posts, setPosts] = useState([
             {id: 1, title: 'JavaScript', body: 'Description'},
